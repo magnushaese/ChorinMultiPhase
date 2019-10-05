@@ -1,0 +1,7 @@
+LOCAL_OBJECTS = \
+interPhaseChangeFoam.o\
+phaseChangeTwoPhaseMixture.o\
+newPhaseChangeTwoPhaseMixture.o\
+Kunz.o\
+Merkle.o\
+SchnerrSauer.o

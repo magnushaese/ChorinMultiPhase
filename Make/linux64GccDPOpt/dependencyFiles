@@ -1,0 +1,7 @@
+DEPENDENCIES = \
+interPhaseChangeFoam.dep\
+phaseChangeTwoPhaseMixtures/phaseChangeTwoPhaseMixture/phaseChangeTwoPhaseMixture.dep\
+phaseChangeTwoPhaseMixtures/phaseChangeTwoPhaseMixture/newPhaseChangeTwoPhaseMixture.dep\
+phaseChangeTwoPhaseMixtures/Kunz/Kunz.dep\
+phaseChangeTwoPhaseMixtures/Merkle/Merkle.dep\
+phaseChangeTwoPhaseMixtures/SchnerrSauer/SchnerrSauer.dep

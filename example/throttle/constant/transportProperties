@@ -1,0 +1,69 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.1.x                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      transportProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+phaseChange on;
+
+//phases (phase1 phase2);
+
+phaseChangeTwoPhaseMixture SchnerrSauer;
+
+pSat             pSat       [1 -1 -2 0 0]    2318;   // für T=20°
+
+sigma           sigma [1 0 -2 0 0 0 0] 0.072;
+
+nu              nu [ 0 2 -1 0 0 0 0 ] 1.7e-06;
+transportModel Newtonian;
+
+phase1
+{
+  transportModel Newtonian;  //Wasser //Werte für T=20°
+    nu              nu [0 2 -1 0 0 0 0] 1.004e-06;
+    rho             rho [1 -3 0 0 0 0 0] 998.2;
+}
+
+phase2
+{
+  transportModel Newtonian;  //Wasserdampf //Werte für T=20°
+    nu              nu [0 2 -1 0 0 0 0] 5.621e-04;
+    rho             rho [1 -3 0 0 0 0 0] 1.73e-02;
+}
+
+KunzCoeffs
+{
+    UInf            UInf   [0 1 -1 0 0 0 0]     20.0;
+    tInf            tInf   [0 0 1 0 0 0 0]      0.005; // L = 0.1 m
+    Cc              Cc     [0 0 0 0 0 0 0]      1000;
+    Cv              Cv     [0 0 0 0 0 0 0]      1000;
+}
+
+MerkleCoeffs //Standard
+{
+  UInf            UInf   [0 1 -1 0 0 0 0]     13.0;
+    tInf            tInf   [0 0 1 0 0 0 0]      0.0082;  // L = 0.107 m
+    Cc              Cc     [0 0 0 0 0 0 0]      80;
+    Cv              Cv     [0 0 0 0 0 0 0]      1;
+}
+
+SchnerrSauerCoeffs //alle an Versuchsfall München angepasst
+{
+  n               n      [0 -3 0 0 0 0 0]     1.0e08; //Keimkonzentration
+  dNuc            dNuc   [0 1 0 0 0 0 0]      2.673e-05; //Keimdurchmesser
+  Cc              Cc     [0 0 0 0 0 0 0]      1000; //Kondensationsratenkoeffizient
+  Cv              Cv     [0 0 0 0 0 0 0]      1000; //Verdampfungratenkoeffizient
+}
+
+
+// ************************************************************************* //

@@ -1,0 +1,6 @@
+include interPhaseChangeFoam.dep
+include phaseChangeTwoPhaseMixtures/phaseChangeTwoPhaseMixture/phaseChangeTwoPhaseMixture.dep
+include phaseChangeTwoPhaseMixtures/phaseChangeTwoPhaseMixture/newPhaseChangeTwoPhaseMixture.dep
+include phaseChangeTwoPhaseMixtures/Kunz/Kunz.dep
+include phaseChangeTwoPhaseMixtures/Merkle/Merkle.dep
+include phaseChangeTwoPhaseMixtures/SchnerrSauer/SchnerrSauer.dep
