@@ -82,54 +82,44 @@ int main(int argc, char *argv[])
 
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
-
+// solve for volume fraction
         #include "alphaEqnSubCycle.H"
         twoPhaseProperties->correct();
 
+
+//// FRACTIONAL STEP	
+// STEP 1 -- velocity prediction
+//
+	Uold = U;
         phi = (fvc::interpolate(U) & mesh.Sf());
-        dU = dt*(fvc::laplacian(turbulence->nuEff(), U) - fvc::div(phi,U));
-	U += dU;
-	#include "continuityErrs.H"
+        dU = dt*(fvc::laplacian(turbulence->nuEff(), U) - fvc::div(phi,U)); //rho^n+1 already inside fvc::[...]
+	U = dU + rho.oldTime()/rho*Uold;
+//	#include "continuityErrs.H"
 	U.correctBoundaryConditions();
-	phi = (fvc::interpolate(U) & mesh.Sf());
+//	phi = (fvc::interpolate(U) & mesh.Sf());
 
-
-       Pair<tmp<volScalarField> > vDotP = twoPhaseProperties->vDotP();
+// STEP 2 -- implicit pressure calculation from Poisson equation
+//
+       Pair<tmp<volScalarField> > vDotP = twoPhaseProperties->vDotP(); //get cavitation source terms for present (n+1) velocity divergence
        const volScalarField& vDotcP = vDotP[0]();
        const volScalarField& vDotvP = vDotP[1]();
 
 	fvScalarMatrix pdEqn
         (
                 fvm::laplacian(pd)
-      //        + (vDotvP - vDotcP)*(rho*gh - pSat) + fvm::Sp(vDotvP - vDotcP, pd)
+//              + (vDotvP - vDotcP)*(rho*gh - pSat) + fvm::Sp(vDotvP - vDotcP, pd)
 	);
         pdEqn.setReference(pdRefCell, pdRefValue);
 
-	solve(pdEqn == fvc::div(U)/dt*rho + (vDotvP - vDotcP)*(rho*gh - pSat)/dt*rho + fvc::Sp(vDotvP - vDotcP, pd)/dt*rho);
-	U -= (fvc::grad(pd) * dt/rho); 
+	solve(pdEqn == (scalar(1.0)/dt*rho)*(fvc::div(U) + (vDotvP - vDotcP)*(rho*gh - pSat) + fvc::Sp(vDotvP - vDotcP, pd)));
+
+// STEP 3 -- final velocity correction step
+	U -= dt/rho*fvc::grad(pd); 
 	U.correctBoundaryConditions();
-	phi = (fvc::interpolate(U) & mesh.Sf());
+//	phi = (fvc::interpolate(U) & mesh.Sf());
+// END FRACTIONAL STEP
+
         turbulence->correct();
-
-/*
-        // --- Outer-corrector loop
-        while (pimple.loop())
-        {
-            #include "alphaEqnSubCycle.H"
-            twoPhaseProperties->correct();
-
-            #include "UEqn.H"
-
-            // --- PISO loop
-            while (pimple.correct())
-            {
-#               include "pEqn.H"
-            }
-            turbulence->correct();
-
-#            include "continuityErrs.H"
-        }
-*/
 
 	runTime.write();
 

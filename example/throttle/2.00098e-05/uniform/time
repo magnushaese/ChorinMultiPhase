@@ -10,47 +10,16 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      controlDict;
+    location    "2.00098e-05/uniform";
+    object      time;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-libs
-(
-    "libincompressibleRASModels.so"
-    "liblduSolvers.so"
-)
+index           381;
 
-startFrom                  latestTime;
+deltaT          5.30439e-08;
 
-startTime                  0;
-
-stopAt                     endTime;
-
-endTime                    4e-3;
-
-deltaT                     1e-8;
-
-writeControl               adjustableRunTime;
-
-writeInterval              1e-5; //1e-8;
-
-purgeWrite                 0;
-
-writeFormat                ascii;
-
-writePrecision             6;
-
-writeCompression           uncompressed;
-
-timeFormat                 general;
-
-runTimeModifiable          yes;
-
-adjustTimeStep             on;
-
-maxCo                      0.5;
-
-maxAcousticCo              50.0;
+deltaT0         5.30439e-08;
 
 
 // ************************************************************************* //

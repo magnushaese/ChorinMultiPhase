@@ -22,7 +22,7 @@ boundaryField
 {
     inlet
     {
-        type            totalPressure;
+        type            zeroGradient; //totalPressure;
         U               U;
         phi             phiv;
         rho             rho;
